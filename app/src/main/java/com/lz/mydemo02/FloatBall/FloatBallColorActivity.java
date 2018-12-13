@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.graphics.Color;
 import android.media.projection.MediaProjectionManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Debug;
 import android.provider.Settings;
@@ -32,27 +33,9 @@ public class FloatBallColorActivity extends AppCompatActivity {
         setContentView(R.layout.activity_float_ball_color);
 
 
-//        requestOverlaysPermission();
-//        requestCapturePermission();
-//
-////        startService(new Intent(FloatBallColorActivity.this, MyService2.class));
-//
-//        getWindow().getDecorView().setSystemUiVisibility(View.INVISIBLE);
-
-            //获取安装应用信息
-//        List<PackageInfo> list = getPackageManager().getInstalledPackages(0);
-//        for (PackageInfo info : list) {
-//            Log.d("PackageInfo ---  ", info.packageName + info.applicationInfo + info.sharedUserId);
-//        }
-
-        //获取当前内存进程信息
-        ActivityManager manager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfos = manager.getRunningAppProcesses();
-        for (ActivityManager.RunningAppProcessInfo info : runningAppProcessInfos) {
-            Debug.MemoryInfo[] processMemoryInfo = manager.getProcessMemoryInfo(new int[]{info.pid});
-            Log.d("RunningAppInfo----", info.processName + "  " + processMemoryInfo[0]);
-        }
-
+        requestOverlaysPermission();
+        requestCapturePermission();
+//        startService(new Intent(FloatBallColorActivity.this, MyService2.class));
 
     }
 
@@ -78,6 +61,7 @@ public class FloatBallColorActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= 23) {
             if (!Settings.canDrawOverlays(getApplicationContext())) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                intent.setData(Uri.parse("package:" + getPackageName()));
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivityForResult(intent, REQUEST_OVERLAYS_CODE);
             } else {
@@ -99,7 +83,7 @@ public class FloatBallColorActivity extends AppCompatActivity {
                 if (resultCode == RESULT_OK && data != null) {
                     MyService.setResultData(data);
                     startService(new Intent(getApplicationContext(), MyService.class));
-//                    finish();
+                    finish();
                 }
                 break;
         }
